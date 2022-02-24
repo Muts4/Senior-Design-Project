@@ -1,0 +1,45 @@
+#include <Wire.h>
+
+int pattern[] = {5, 55, 555};
+
+void setup() {
+  Wire.begin();
+}
+
+void loop() {
+  Wire.beginTransmission(9); 
+  Wire.write(pattern, 3);   
+  Wire.endTransmission();    
+  delay(1000);               
+}
+
+#include <Wire.h>
+
+int pattern[] = {0, 0, 0};
+
+void setup() {
+  Serial.begin (9600); 
+  Wire.begin(9);
+  Wire.onReceive(receiveEvent);
+}
+
+void receiveEvent(int bytes) {
+  for (int i = 0; i < 3; i++)
+  {
+    int x = Wire.read();  
+    pattern[i] = x;
+  }
+}
+
+void loop() {
+  // Print the received characters
+  Serial.print('\n');
+  Serial.print(pattern[0]);
+  Serial.print('\t');
+  Serial.print(pattern[1]);
+  Serial.print('\t');
+  Serial.print(pattern[2]);
+  Serial.print('\n');
+
+  delay(1000);  // delay of 1 sec
+}
