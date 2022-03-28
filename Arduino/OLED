@@ -1,0 +1,37 @@
+#include <ArduinoBLE.h>
+#include <SD.h>
+#include <Wire.h>
+#include "SSD1306Ascii.h"
+#include "SSD1306AsciiWire.h"
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 32 // OLED display height, in pixels
+
+#define SERVICE_UUID  F("eb2bc2f3-a779-4bb1-9825-03c2878a3f07")
+#define Sensor1_UUID F("f8683b5f-7f26-40e1-9e1b-535910de7924")
+
+#define Button1Pin 2              //Buton to Start and Pause Taking values from sensors
+#define Button2Pin 3              //Button of Trigger
+#define Button3Pin 4                //Button to turn OLED/ off 
+SSD1306AsciiWire oled;
+File myFile;                  //File Object to write on the SD Card
+// variables:
+uint8_t sensorvalues[6];
+uint8_t batteryLevel;
+void setup() {
+ Wire.begin();
+ Wire.setClock(400000L);
+ oled.begin(&Adafruit128x64, 0x3C);
+ SD.begin(10);
+  // initialize the Bluetooth® Low Energy hardware
+  BLE.begin();
+ // start scanning for peripherals
+  BLE.scanForUuid(SERVICE_UUID);
+  pinMode(Button1Pin, INPUT_PULLUP);
+  pinMode(Button2Pin, INPUT_PULLUP);
+  pinMode(Button3Pin, INPUT_PULLUP);
+}
+
+
+void loop() {
+  // check if a peripheral has been discovered
+if(digitalRead(Button2Pin)==LOW)
