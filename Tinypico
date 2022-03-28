@@ -1,0 +1,36 @@
+//TinyPico Code to take the values of 6 A201 sensors and Send it using BLE  to the Arduino Rev2 
+#include <BLEDevice.h>
+#include <BLEServer.h>              //Required Libraries to Send Values through the bluetooth
+#include <BLEUtils.h>
+#include <BLE2902.h>
+
+#define SensorPin1 32
+#define SensorPin2 33
+#define SensorPin3 25             //All the Sensor Pins being defined according to the ADC Channels
+#define SensorPin4 26
+#define SensorPin5 27
+#define SensorPin6 15
+
+
+#define SERVICE_UUID  "eb2bc2f3-a779-4bb1-9825-03c2878a3f07"
+#define Sensor1_UUID "f8683b5f-7f26-40e1-9e1b-535910de7924"
+
+
+BLEServer* pServer = NULL;
+BLECharacteristic* pCharacteristic = NULL;
+bool deviceConnected = false;
+bool oldDeviceConnected = false;
+
+// variables:
+
+int sensorValue[6];      // Array for Sensor Values
+
+int sensorMin = 0;        // minimum sensor value
+int sensorMax = 10;           // maximum sensor value
+//Our Sensor is Reading Values form 0 lb of force to 100 lb
+bool updatedvalue=false;                                        //Boolean to check if sensor values are read again or not
+const unsigned long interval = 8UL*60UL*60UL*1000UL;            //Interval to Run our TinyPico for 8 hours this interval is 8 hours time   
+ unsigned long currentMillis = millis();                        //Time when our TinyPico Boots up
+
+
+ std::string value="1";                                             //String to store the written values from the rev board
